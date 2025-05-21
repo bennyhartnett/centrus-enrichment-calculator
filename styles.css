@@ -1,0 +1,10 @@
+.input-group .form-control.w-50 { max-width: 50%; }
+.unit-select, .input-group .form-select.w-auto { width: auto !important; min-width: unset !important; }
+@media (max-width: 576px) {
+  .input-group .form-control.w-50 { max-width: 100%; }
+  .input-group { flex-wrap: wrap; }
+  .input-group .input-group-text, .input-group .form-select, .input-group .form-control {
+    flex: 1 1 100%;
+  }
+  .input-group .form-select { margin-top: .5rem; }
+}
