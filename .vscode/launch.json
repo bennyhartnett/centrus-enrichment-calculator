@@ -1,0 +1,11 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Open HTML in Browser",
+            "type": "pwa-chrome",
+            "request": "launch",
+            "file": "${workspaceFolder}/enrichment-calculator.html"
+        }
+    ]
+}
