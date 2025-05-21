@@ -18,6 +18,9 @@ Each calculation copies its result to the clipboard and is logged in a history s
 
 No build step or local server is required—everything runs entirely in the browser.
 
+## Live Site
+A live demo is available at [bennyhartnett.com/enrichment-calculator.html](https://bennyhartnett.com/enrichment-calculator.html).
+
 ## Development
 The algorithms live in [`calculate.js`](calculate.js). Input parsing, error handling and history tracking are included. Bootstrap and Bootstrap Icons are loaded from public CDNs.
 
