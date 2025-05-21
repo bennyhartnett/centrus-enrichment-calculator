@@ -1,7 +1,8 @@
 # Centrus Enrichment Calculator
 
 <p align="center">
-  <img src="assets/centrus-logo.svg" alt="Centrus Energy Logo" width="240"/>
+  <!-- Approximated Centrus Energy logo. Replace with official artwork if available. -->
+  <img src="assets/centrus-energy-logo.svg" alt="Centrus Energy Logo" width="240"/>
 </p>
 
 A lightweight, client-side tool for exploring uranium enrichment scenarios. The calculators are implemented in plain JavaScript and styled with Bootstrap.
@@ -17,16 +18,35 @@ Each calculation copies its result to the clipboard and is logged in a history s
 
 ## Formulas and Calculations
 The calculators implement the standard mass balance and separative work unit (SWU) equations used in the
-nuclear fuel cycle. The key relationships are:
+nuclear fuel cycle. The key relationships are shown below using MathJax notation.
 
-- **Value function** \(V(x) = (1 - 2x) \ln((1-x)/x)\). This describes the enrichment value of material at assay fraction \(x\).
-- **Mass balance** for a product mass \(P\) with assays \(x_p\) (product), \(x_f\) (feed) and \(x_w\) (tails):
-  \[F = \frac{x_p - x_w}{x_f - x_w} P, \quad W = F - P\]
-- **SWU requirement** for that scenario:
-  \[\text{SWU} = P\,V(x_p) + W\,V(x_w) - F\,V(x_f)\]
+1. **Value function**
+   $$
+   V(x) = (1 - 2x) \ln\left(\frac{1-x}{x}\right)
+   $$
+2. **Mass balance** for a product mass $P$ with assays $x_p$ (product), $x_f$ (feed) and $x_w$ (tails)
+   $$
+   F = \frac{x_p - x_w}{x_f - x_w} P,\quad W = F - P
+   $$
+3. **SWU requirement** for that scenario
+   $$
+   \text{SWU} = P\,V(x_p) + W\,V(x_w) - F\,V(x_f)
+   $$
+4. **Product from feed**
+   $$
+   P = \frac{x_f - x_w}{x_p - x_w} F
+   $$
+5. **Product from SWU capacity**
+   $$
+   P = \frac{S}{V(x_p) + \frac{x_p - x_f}{x_f - x_w} V(x_w) - \frac{x_p - x_w}{x_f - x_w} V(x_f)}
+   $$
+6. **Cost per kilogram** (used in the optimum tails search)
+   $$
+   C = c_f \frac{F}{P} + c_s \frac{\text{SWU}}{P}
+   $$
 
 Additional calculators determine output quantities for given feed or SWU capacity and search for the optimum
-tails assay that minimizes the cost per kilogram using a goldenâ€“section search algorithm.
+tails assay that minimizes the cost per kilogram using a golden-section search algorithm.
 
 ## Usage
 1. Clone or download this repository.
