@@ -29,13 +29,25 @@ A lightweight, browser-based tool for exploring uranium enrichment scenarios. Al
 4. Results are copied to your clipboard and also appear in the history panel.
 
 ## Features
-- **Feed & SWU for 1 kg product** – determine feed and separative work required for a single kilogram of enriched uranium.
-- **Feed & SWU from product quantity** – compute input requirements for a specified product mass.
-- **Product & SWU from feed quantity** – estimate how much enriched uranium can be produced from a feed stock.
-- **Feed & product from SWU capacity** – calculate material flows when you know the available SWU.
-- **Optimum tails assay** – search for the economic tails assay that minimizes cost per kilogram.
+The calculator provides a complete suite of enrichment tools that run entirely
+in the browser:
 
-Each calculation automatically copies its result to the clipboard and is logged in the on-page history section for later reference.
+- **Feed & SWU for 1 kg product** – determine feed and separative work required
+  for a single kilogram of enriched uranium.
+- **Feed & SWU from product quantity** – compute input requirements for a
+  specified product mass.
+- **Product & SWU from feed quantity** – estimate how much enriched uranium can
+  be produced from a feed stock.
+- **Feed & product from SWU capacity** – calculate material flows when you know
+  the available SWU.
+- **Optimum tails assay** – search for the economic tails assay that minimizes
+  cost per kilogram using a golden‑section search.
+
+Each calculation automatically copies its result to the clipboard and is recorded
+in the on-page history log (up to the last 20 entries). Inputs accept
+percentages or fractions for assays and common units for masses, and the page
+continues to work offline after the initial load. The responsive interface is
+built with Bootstrap and supports pressing **Enter** to trigger calculations.
 
 ## Usage
 Open `enrichment-calculator.html` in your browser and fill in the values for the desired calculation. Press **Calculate** to see the results. Use the **Clear** button to reset a form if needed. No build step or server is required—everything runs entirely in the browser.
