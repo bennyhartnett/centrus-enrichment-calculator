@@ -26,7 +26,7 @@ A lightweight, browser-based tool for exploring uranium enrichment scenarios. Al
    Opening the HTML file directly with the `file://` scheme may trigger strict CORS
    rules in modern browsers and prevent `calculate.js` from loading.
 3. Enter your desired inputs and press **Calculate**.
-4. Results are copied to your clipboard and also appear in the history panel.
+ 
 
 ## Features
 The calculator provides a complete suite of enrichment tools that run entirely
@@ -43,8 +43,7 @@ in the browser:
 - **Optimum tails assay** – search for the economic tails assay that minimizes
   cost per kilogram using a golden‑section search.
 
-Each calculation automatically copies its result to the clipboard and is recorded
-in the on-page history log (up to the last 20 entries). Inputs accept
+Inputs accept
 percentages or fractions for assays and common units for masses, and the page
 continues to work offline after the initial load. The responsive interface is
 built with Bootstrap and supports pressing **Enter** to trigger calculations.
@@ -85,7 +84,7 @@ The calculators implement the standard mass balance and separative work unit (SW
 Additional calculators determine output quantities for given feed or SWU capacity and search for the optimum tails assay that minimizes the cost per kilogram using a golden-section search algorithm.
 
 ## Development
-The algorithms live in [`calculate.js`](calculate.js). Input parsing, error handling and history tracking are included. Bootstrap and Bootstrap Icons are loaded from public CDNs. Feel free to modify the HTML or JavaScript to suit your needs.
+The algorithms live in [`calculate.js`](calculate.js). Input parsing, and error handling are included. Bootstrap and Bootstrap Icons are loaded from public CDNs. Feel free to modify the HTML or JavaScript to suit your needs.
  
 ## Contributing
 Contributions are welcome! Feel free to open issues or submit pull requests. For major changes, please open an issue first to discuss what you would like to change.

@@ -8,12 +8,12 @@
  *  - Optimized algorithm (golden-section search for optimum tails assay)
  *  - Performance safeguards (debounce, button disabling)
  *  - UX enhancements (Enter-key submission, copy-to-clipboard)
- *  - Calculation history tracking
+ * 
  *
  * Usage:
  *  - Include this script in an HTML page with matching element IDs
  *  - Each calculator form should have class ".calculator" wrapping inputs and a button
- *  - Provide a <div id="calc-history"></div> to display recent runs
+ *   
  */
 
 // Tiny epsilon to avoid division-by-zero or log(0)
@@ -21,7 +21,7 @@ const EPS = 1e-9;
 // Maximum iterations for search algorithms
 const MAX_ITER = 100;
 // In-memory record of the last 20 calculations
-let history = [];
+ 
 
 // --- Utility Functions ---
 /**
@@ -347,49 +347,9 @@ function findOptimumTails(xp, xf, cf, cs) {
   return { xw, F_per_P: Fp, swu_per_P: swu_p, cost_per_P: costVal };
 }
 
-// --- History & Rendering ---
-/**
- * recordHistory
- * Logs each calculation with name, inputs, result, and timestamp.
- * Keeps only the latest 20 entries.
- */
-function recordHistory(name, inputs, result) {
-  history.push({ name, inputs, result, time: new Date().toLocaleTimeString() });
-  if (history.length > 20) history.shift();
-  renderHistory();
-}
+ 
 
-/**
- * removeHistoryEntry
- * Deletes a single entry from the history array by index.
- * @param {number} idx - index of the entry to remove
- */
-function removeHistoryEntry(idx) {
-  if (idx >= 0 && idx < history.length) {
-    history.splice(idx, 1);
-    renderHistory();
-  }
-}
 
-/**
- * renderHistory
- * Renders the history array into the #calc-history container as HTML.
- */
-function renderHistory() {
-  const container = document.getElementById('calc-history');
-  if (!container) return;
-  container.innerHTML = history.map((item, idx) =>
-    `<div class="history-entry">` +
-      `<div>` +
-        `<strong>[${item.time}]</strong> ${item.name}: ` +
-        `${JSON.stringify(item.inputs)} → ${JSON.stringify(item.result)}` +
-      `</div>` +
-      `<button class="btn btn-link btn-sm text-danger" onclick="removeHistoryEntry(${idx})" aria-label="Remove">` +
-        `<i class="bi bi-x-circle"></i>` +
-      `</button>` +
-    `</div>`
-  ).join('');
-}
 
 // --- DOM Binding ---
 function init() {
@@ -419,7 +379,7 @@ function init() {
       byId('feed1').value = res.F.toFixed(6);
       byId('swu1').value = res.swu.toFixed(3);
       copyToClipboard(`${res.F.toFixed(6)} kg, ${res.swu.toFixed(3)} SWU`);
-      recordHistory('mode1', { xp, xw, xf }, res);
+       
     } catch (err) {
       alert(err.message);
     }
@@ -437,7 +397,7 @@ function init() {
       byId('feed2').value = res.F.toFixed(6);
       byId('swu2').value = res.swu.toFixed(3);
       copyToClipboard(`${res.F.toFixed(6)} kg, ${res.swu.toFixed(3)} SWU`);
-      recordHistory('mode2', { P, xp, xw, xf }, res);
+      
     } catch (err) {
       alert(err.message);
     }
@@ -455,7 +415,7 @@ function init() {
       byId('P3').value = res.P.toFixed(6);
       byId('swu3').value = res.swu.toFixed(3);
       copyToClipboard(`${res.P.toFixed(6)} kg, ${res.swu.toFixed(3)} SWU`);
-      recordHistory('mode3', { F, xp, xw, xf }, res);
+       
     } catch (err) {
       alert(err.message);
     }
@@ -473,7 +433,7 @@ function init() {
       byId('P4').value = res.P.toFixed(6);
       byId('feed4').value = res.F.toFixed(6);
       copyToClipboard(`${res.P.toFixed(6)} kg, ${res.F.toFixed(6)} kg feed`);
-      recordHistory('mode4', { S, xp, xw, xf }, res);
+       
     } catch (err) {
       alert(err.message);
     }
@@ -491,20 +451,18 @@ function init() {
       const xwPercent = res.xw * 100;
       byId('xw5').value = xwPercent.toFixed(3);
       copyToClipboard(`${xwPercent.toFixed(3)} %`);
-      recordHistory('mode5', { cf, cs, xp, xf }, res);
+     
     } catch (err) {
       alert(err.message);
     }
   });
   byId('clear5').addEventListener('click', () => byId('form5').reset());
-
-  renderHistory();
-
+ 
   const yearEl = document.getElementById('current-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   // Expose remover globally for inline handlers
-  window.removeHistoryEntry = removeHistoryEntry;
+  
 }
 
 if (typeof document !== 'undefined') {
