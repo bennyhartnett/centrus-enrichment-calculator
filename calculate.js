@@ -340,16 +340,33 @@ function recordHistory(name, inputs, result) {
 }
 
 /**
+ * removeHistoryEntry
+ * Deletes a single entry from the history array by index.
+ * @param {number} idx - index of the entry to remove
+ */
+function removeHistoryEntry(idx) {
+  if (idx >= 0 && idx < history.length) {
+    history.splice(idx, 1);
+    renderHistory();
+  }
+}
+
+/**
  * renderHistory
  * Renders the history array into the #calc-history container as HTML.
  */
 function renderHistory() {
   const container = document.getElementById('calc-history');
   if (!container) return;
-  container.innerHTML = history.map(item =>
+  container.innerHTML = history.map((item, idx) =>
     `<div class="history-entry">` +
-      `<strong>[${item.time}]</strong> ${item.name}: ` +
-      `${JSON.stringify(item.inputs)} → ${JSON.stringify(item.result)}` +
+      `<div>` +
+        `<strong>[${item.time}]</strong> ${item.name}: ` +
+        `${JSON.stringify(item.inputs)} → ${JSON.stringify(item.result)}` +
+      `</div>` +
+      `<button class="btn btn-link btn-sm text-danger" onclick="removeHistoryEntry(${idx})" aria-label="Remove">` +
+        `<i class="bi bi-x-circle"></i>` +
+      `</button>` +
     `</div>`
   ).join('');
 }
@@ -465,6 +482,9 @@ function init() {
 
   const yearEl = document.getElementById('current-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // Expose remover globally for inline handlers
+  window.removeHistoryEntry = removeHistoryEntry;
 }
 
 if (typeof document !== 'undefined') {

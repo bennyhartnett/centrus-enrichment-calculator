@@ -57,3 +57,11 @@ footer a {
   color: #fff;
   text-decoration: underline;
 }
+
+/* History log styling */
+.history-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
