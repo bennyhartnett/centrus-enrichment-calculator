@@ -451,8 +451,9 @@ function init() {
       const xp = getAssay('xp5');
       const xf = getAssay('xf5');
       const res = findOptimumTails(xp, xf, cf, cs);
-      byId('xw5').value = res.xw.toFixed(6);
-      copyToClipboard(`${res.xw.toFixed(6)} fraction`);
+      const xwPercent = res.xw * 100;
+      byId('xw5').value = xwPercent.toFixed(3);
+      copyToClipboard(`${xwPercent.toFixed(3)} %`);
       recordHistory('mode5', { cf, cs, xp, xf }, res);
     } catch (err) {
       alert(err.message);
