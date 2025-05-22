@@ -1,0 +1,43 @@
+/* ---------------------------------------------------------
+   Mobile-specific fixes for Uranium Enrichment Calculator
+   Place this file _after_ the existing styles.css import or
+   merge the rules into the bottom of styles.css
+--------------------------------------------------------- */
+
+/* 1.  Give the white card its full width on phones
+      (Make sure this rule comes AFTER any .container width
+       declarations so that it wins the cascade.) */
+@media (max-width: 576px) {
+  .container,
+  .accordion {
+    width: 100% !important;   /* occupy the whole viewport */
+  }
+
+  /* 2.  Let long labels wrap instead of squashing the input */
+  .input-group {
+    flex-wrap: wrap !important;   /* allow rows to break */
+  }
+
+  /* 3.  Stack the prefix label, the input, and the unit on
+         separate rows so nothing gets a zero width. */
+  .input-group .input-group-text {
+    flex: 0 0 100%;            /* each spans full width */
+    text-align: left;
+  }
+  .input-group .form-control,
+  .input-group .form-select {
+    flex: 1 1 100%;            /* input selects take full row */
+    min-width: 0;              /* prevent overflow */
+  }
+
+  /* 4.  Make the long mass-unit strings a bit smaller so they
+         fit comfortably. Feel free to tweak the size. */
+  .input-group .mass-unit {
+    font-size: 0.8rem;
+  }
+
+  /* 5.  Trim the card’s horizontal padding to claw back space */
+  .container {
+    padding: 1rem !important;
+  }
+}
