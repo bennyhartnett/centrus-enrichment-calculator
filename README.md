@@ -38,32 +38,31 @@ Open `enrichment-calculator.html` in your browser and fill in the values for the
 A live demo is available at [bennyhartnett.com/enrichment-calculator.html](https://bennyhartnett.com/enrichment-calculator.html).
 
 ## Formulas
-The calculators implement the standard mass balance and separative work unit (SWU) equations used in the nuclear fuel cycle. The key relationships are shown below using MathJax notation.
+The calculators implement the standard mass balance and separative work unit (SWU) equations used in the nuclear fuel cycle. The key relationships are shown below using LaTeX math notation, which GitHub renders natively.
 
 1. **Value function**
-   $$
-   V(x) = (1 - 2x) \ln\left(\frac{1-x}{x}\right)
-   $$
+
+   $$V(x) = (1 - 2x) \ln\left(\tfrac{1 - x}{x}\right)$$
+
 2. **Mass balance** for a product mass $P$ with assays $x_p$ (product), $x_f$ (feed) and $x_w$ (tails)
-   $$
-   F = \frac{x_p - x_w}{x_f - x_w} P,\quad W = F - P
-   $$
+
+   $$F = \frac{x_p - x_w}{x_f - x_w} P,\quad W = F - P$$
+
 3. **SWU requirement** for that scenario
-   $$
-   \text{SWU} = P\,V(x_p) + W\,V(x_w) - F\,V(x_f)
-   $$
+
+   $$\text{SWU} = P\,V(x_p) + W\,V(x_w) - F\,V(x_f)$$
+
 4. **Product from feed**
-   $$
-   P = \frac{x_f - x_w}{x_p - x_w} F
-   $$
+
+   $$P = \frac{x_f - x_w}{x_p - x_w} F$$
+
 5. **Product from SWU capacity**
-   $$
-   P = \frac{S}{V(x_p) + \frac{x_p - x_f}{x_f - x_w} V(x_w) - \frac{x_p - x_w}{x_f - x_w} V(x_f)}
-   $$
+
+   $$P = \frac{S}{V(x_p) + \tfrac{x_p - x_f}{x_f - x_w} V(x_w) - \tfrac{x_p - x_w}{x_f - x_w} V(x_f)}$$
+
 6. **Cost per kilogram** (used in the optimum tails search)
-   $$
-   C = c_f \frac{F}{P} + c_s \frac{\text{SWU}}{P}
-   $$
+
+   $$C = c_f \frac{F}{P} + c_s \frac{\text{SWU}}{P}$$
 
 Additional calculators determine output quantities for given feed or SWU capacity and search for the optimum tails assay that minimizes the cost per kilogram using a golden-section search algorithm.
 
