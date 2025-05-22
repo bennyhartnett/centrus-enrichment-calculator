@@ -84,7 +84,7 @@ The calculators implement the standard mass balance and separative work unit (SW
 Additional calculators determine output quantities for given feed or SWU capacity and search for the optimum tails assay that minimizes the cost per kilogram using a golden-section search algorithm.
 
 ## Development
-The algorithms live in [`calculate.js`](calculate.js). Input parsing, and error handling are included. Bootstrap and Bootstrap Icons are loaded from public CDNs. Feel free to modify the HTML or JavaScript to suit your needs.
+The algorithms live in [`calculate.js`](calculate.js). Input parsing and error handling are included. SweetAlert2 provides the popup dialogs, while Bootstrap and Bootstrap Icons are loaded from public CDNs. Feel free to modify the HTML or JavaScript to suit your needs.
  
 ## Contributing
 Contributions are welcome! Feel free to open issues or submit pull requests. For major changes, please open an issue first to discuss what you would like to change.
