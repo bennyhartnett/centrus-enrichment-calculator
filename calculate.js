@@ -355,7 +355,7 @@ function renderHistory() {
 }
 
 // --- DOM Binding ---
-document.addEventListener('DOMContentLoaded', () => {
+function init() {
   // Enter key submits the nearest calculator
   document.body.addEventListener('keydown', e => {
     if (e.key === 'Enter' && document.activeElement.tagName === 'INPUT') {
@@ -461,9 +461,20 @@ document.addEventListener('DOMContentLoaded', () => {
   byId('clear5').addEventListener('click', () => byId('form5').reset());
 
   renderHistory();
+
+
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+}
+
   const yearEl = document.getElementById('current-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 });
+
 
 export {
   computeFeedSwuForOneKg,
