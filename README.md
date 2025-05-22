@@ -70,3 +70,6 @@ Additional calculators determine output quantities for given feed or SWU capacit
 ## Development
 The algorithms live in [`calculate.js`](calculate.js). Input parsing, error handling and history tracking are included. Bootstrap and Bootstrap Icons are loaded from public CDNs. Feel free to modify the HTML or JavaScript to suit your needs.
 
+
+## License
+No license has been specified. This project is provided as-is for educational use. No warranty or guarantee of accuracy is expressed or implied.
