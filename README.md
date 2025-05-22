@@ -72,3 +72,6 @@ The algorithms live in [`calculate.js`](calculate.js). Input parsing, error hand
 
 ## License
 No license has been specified. This project is provided as-is for educational use. No warranty or guarantee of accuracy is expressed or implied.
+
+## Contributing
+Contributions are welcome! Feel free to open issues or submit pull requests. For major changes, please open an issue first to discuss what you would like to change.
