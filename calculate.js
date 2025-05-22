@@ -660,6 +660,15 @@ function init() {
   const yearEl = document.getElementById('current-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+  // When accordion sections expand, keep the header in view
+  document.querySelectorAll('#calcModes .accordion-collapse')
+    .forEach(el => {
+      el.addEventListener('shown.bs.collapse', () => {
+        const header = el.previousElementSibling;
+        if (header) header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
   // Expose remover globally for inline handlers
   
 }
