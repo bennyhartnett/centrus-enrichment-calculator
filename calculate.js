@@ -518,7 +518,10 @@ function init() {
   function resetForm(formId) {
     const form = byId(formId);
     form.reset();
-    form.querySelectorAll('input').forEach(i => i.classList.remove('is-valid'));
+    form.querySelectorAll('input').forEach(i => {
+      i.value = '';
+      i.classList.remove('is-valid');
+    });
   }
 
   byId('clear1').addEventListener('click', () => resetForm('form1'));
