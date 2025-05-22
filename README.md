@@ -5,7 +5,13 @@
   <img src="assets/centrus-energy-logo.svg" alt="Centrus Energy Logo" width="240"/>
 </p>
 
-A lightweight, client-side tool for exploring uranium enrichment scenarios. The calculators are implemented in plain JavaScript and styled with Bootstrap.
+A lightweight, client-side tool for exploring uranium enrichment scenarios. The calculators are implemented in plain JavaScript and styled with Bootstrap. All calculations run entirely in the browser so the page can be used offline after the first load. This project is not affiliated with Centrus Energy and is provided solely as a learning resource.
+
+## Getting Started
+1. Clone or download this repository.
+2. Open `enrichment-calculator.html` in any modern web browser.
+3. Enter your desired inputs and press **Calculate**.
+4. Results are copied to your clipboard and also appear in the history panel.
 
 ## Features
 - **Feed & SWU for 1 kg product** – determine feed and separative work required for a single kilogram of enriched uranium.
@@ -49,11 +55,7 @@ Additional calculators determine output quantities for given feed or SWU capacit
 tails assay that minimizes the cost per kilogram using a golden-section search algorithm.
 
 ## Usage
-1. Clone or download this repository.
-2. Open `enrichment-calculator.html` in any modern web browser.
-3. Enter your desired inputs and press **Calculate**.
-
-No build step or local server is required—everything runs entirely in the browser.
+Open `enrichment-calculator.html` in your browser and fill in the values for the desired calculation. Press **Calculate** to see the results. Use the Clear button to reset a form if needed. No build step or server is required—everything runs entirely in the browser.
 
 ## Live Site
 A live demo is available at [bennyhartnett.com/enrichment-calculator.html](https://bennyhartnett.com/enrichment-calculator.html).
@@ -65,4 +67,6 @@ Feel free to modify the HTML or JavaScript to suit your needs.
 
 ## License
 No license has been specified.
+
+This project is provided as-is for educational use. No warranty or guarantee of accuracy is expressed or implied.
 
