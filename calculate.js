@@ -461,7 +461,7 @@ function init() {
   byId('clear5').addEventListener('click', () => byId('form5').reset());
 
   renderHistory();
-}
+
 
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {
@@ -470,6 +470,11 @@ if (typeof document !== 'undefined') {
     init();
   }
 }
+
+  const yearEl = document.getElementById('current-year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+});
+
 
 export {
   computeFeedSwuForOneKg,
