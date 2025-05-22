@@ -18,7 +18,13 @@ A lightweight, browser-based tool for exploring uranium enrichment scenarios. Al
 
 ## Getting Started
 1. Clone or download this repository.
-2. Open `enrichment-calculator.html` in any modern web browser.
+2. **Serve the files locally** using a simple HTTP server:
+   ```bash
+   python3 -m http.server
+   ```
+   Then open [`http://localhost:8000/enrichment-calculator.html`](http://localhost:8000/enrichment-calculator.html) in your browser.
+   Opening the HTML file directly with the `file://` scheme may trigger strict CORS
+   rules in modern browsers and prevent `calculate.js` from loading.
 3. Enter your desired inputs and press **Calculate**.
 4. Results are copied to your clipboard and also appear in the history panel.
 
