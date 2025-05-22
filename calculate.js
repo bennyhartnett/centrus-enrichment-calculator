@@ -381,7 +381,7 @@ function init() {
       copyToClipboard(`${res.F.toFixed(6)} kg, ${res.swu.toFixed(3)} SWU`);
        
     } catch (err) {
-      alert(err.message);
+      Swal.fire({ icon: 'error', title: 'Error', text: err.message });
     }
   });
   byId('clear1').addEventListener('click', () => byId('form1').reset());
@@ -399,7 +399,7 @@ function init() {
       copyToClipboard(`${res.F.toFixed(6)} kg, ${res.swu.toFixed(3)} SWU`);
       
     } catch (err) {
-      alert(err.message);
+      Swal.fire({ icon: 'error', title: 'Error', text: err.message });
     }
   });
   byId('clear2').addEventListener('click', () => byId('form2').reset());
@@ -417,7 +417,7 @@ function init() {
       copyToClipboard(`${res.P.toFixed(6)} kg, ${res.swu.toFixed(3)} SWU`);
        
     } catch (err) {
-      alert(err.message);
+      Swal.fire({ icon: 'error', title: 'Error', text: err.message });
     }
   });
   byId('clear3').addEventListener('click', () => byId('form3').reset());
@@ -435,7 +435,7 @@ function init() {
       copyToClipboard(`${res.P.toFixed(6)} kg, ${res.F.toFixed(6)} kg feed`);
        
     } catch (err) {
-      alert(err.message);
+      Swal.fire({ icon: 'error', title: 'Error', text: err.message });
     }
   });
   byId('clear4').addEventListener('click', () => byId('form4').reset());
@@ -453,7 +453,7 @@ function init() {
       copyToClipboard(`${xwPercent.toFixed(3)} %`);
      
     } catch (err) {
-      alert(err.message);
+      Swal.fire({ icon: 'error', title: 'Error', text: err.message });
     }
   });
   byId('clear5').addEventListener('click', () => byId('form5').reset());
