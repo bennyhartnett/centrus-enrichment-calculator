@@ -472,6 +472,34 @@ function init() {
   document.querySelectorAll('form.calculator input:not([readonly])')
     .forEach(inp => inp.addEventListener('input', () => validateInput(inp)));
 
+  function setupSyncFields() {
+    const groups = {};
+    document.querySelectorAll('form.calculator input[id]')
+      .forEach(inp => {
+        if (inp.hasAttribute('readonly')) return;
+        const m = inp.id.match(/^([a-zA-Z]+)\d+$/);
+        if (!m) return;
+        const base = m[1];
+        (groups[base] ||= []).push(inp);
+      });
+
+    Object.values(groups).forEach(inputs => {
+      if (inputs.length < 2) return;
+      inputs.forEach(inp => {
+        inp.addEventListener('input', () => {
+          inputs.forEach(other => {
+            if (other !== inp) {
+              other.value = inp.value;
+              validateInput(other);
+            }
+          });
+        });
+      });
+    });
+  }
+
+  setupSyncFields();
+
   // Mode 1 - Feed & SWU for 1 kg
   byId('calc1').addEventListener('click', () => {
     try {
