@@ -2,7 +2,7 @@
 
 <p align="center">
   <!-- Approximated Centrus Energy logo. Replace with official artwork if available. -->
-  <img src="assets/centrus-energy-logo.svg" alt="Centrus Energy Logo" width="240"/>
+  <img src="assets/Centrus-Logo-Color-1-400x222.svg" alt="Centrus Energy Logo" width="240"/>
 </p>
 
 A lightweight, browser-based tool for exploring uranium enrichment scenarios. All calculations run entirely client-side using plain JavaScript, so the page works offline after the initial load. This project is **not** affiliated with Centrus Energy and is provided only as an educational resource.
