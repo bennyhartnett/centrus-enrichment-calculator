@@ -21,6 +21,14 @@ const EPS = 1e-9;
 // Maximum iterations for search algorithms
 const MAX_ITER = 100;
 // In-memory record of the last 20 calculations
+
+// Conversion factors for unit toggling
+const UNIT_FACTORS = { kg: 1, lb: 2.20462262185 };
+const FORM_FACTORS = {
+  'UF₆': 352.019328978 / 238.02891,
+  'U₃O₈': 842.07873 / (3 * 238.02891),
+  'U metal': 1
+};
  
 
 // --- Utility Functions ---
@@ -121,7 +129,7 @@ function parseAssay(raw, unitSelect) {
  * @returns {number} mass in kg
  * @throws Error if invalid or non-positive
  */
-function parseMass(raw, unitSelect) {
+function parseMass(raw, unitSelect, formSelect = { value: 'UF₆' }) {
   raw = raw.trim();
   const match = raw.match(/^([\d./]+)\s*(kg|g|lb)$/i);
   let num, unit;
@@ -134,11 +142,13 @@ function parseMass(raw, unitSelect) {
   }
   if (isNaN(num) || num <= 0) throw new Error('Mass must be a positive number');
   switch (unit) {
-    case 'kg': return num;
-    case 'g': return num / 1000;
-    case 'lb': return num * 0.45359237;
+    case 'kg': break;
+    case 'g': num /= 1000; break;
+    case 'lb': num *= 0.45359237; break;
     default: throw new Error('Unsupported mass unit: ' + unit);
   }
+  const formFactor = FORM_FACTORS[formSelect.value] || 1;
+  return num / formFactor;
 }
 
 /**
@@ -363,10 +373,68 @@ function init() {
 
   const fracUnit = { value: 'fraction' };
   const massUnit = { value: 'kg' };
+  const massForm = { value: 'UF₆' };
+
+  let massMode = 0; // index into MASS_STATES
+  let assayPercent = false;
+
+  const MASS_STATES = [
+    { unit: 'kg', form: 'UF₆' },
+    { unit: 'lb', form: 'UF₆' },
+    { unit: 'kg', form: 'U₃O₈' },
+    { unit: 'lb', form: 'U₃O₈' },
+    { unit: 'kg', form: 'U metal' },
+    { unit: 'lb', form: 'U metal' }
+  ];
+
+  function applyMassMode(prev, next) {
+    const from = MASS_STATES[prev];
+    const to = MASS_STATES[next];
+    massUnit.value = to.unit;
+    massForm.value = to.form;
+    document.querySelectorAll('.mass-unit').forEach(s => {
+      s.textContent = `${to.unit} ${to.form}`;
+    });
+    const factor = UNIT_FACTORS[to.unit] / UNIT_FACTORS[from.unit]
+                * FORM_FACTORS[to.form] / FORM_FACTORS[from.form];
+    document.querySelectorAll('input.mass-field').forEach(inp => {
+      const val = parseFloat(inp.value);
+      if (!isNaN(val)) inp.value = (val * factor).toFixed(6);
+    });
+  }
+
+  function toggleMass() {
+    const prev = massMode;
+    massMode = (massMode + 1) % MASS_STATES.length;
+    applyMassMode(prev, massMode);
+  }
+
+  document.querySelectorAll('.mass-unit').forEach(span => {
+    span.style.cursor = 'pointer';
+    span.addEventListener('click', toggleMass);
+  });
+
+  function toggleAssay() {
+    const factor = assayPercent ? 0.01 : 100;
+    assayPercent = !assayPercent;
+    fracUnit.value = assayPercent ? 'percent' : 'fraction';
+    document.querySelectorAll('.assay-unit').forEach(s => {
+      s.textContent = assayPercent ? '% ²³⁵U' : 'fraction';
+    });
+    document.querySelectorAll('input.assay-field').forEach(inp => {
+      const val = parseFloat(inp.value);
+      if (!isNaN(val)) inp.value = (val * factor).toFixed(5);
+    });
+  }
+
+  document.querySelectorAll('.assay-unit').forEach(span => {
+    span.style.cursor = 'pointer';
+    span.addEventListener('click', toggleAssay);
+  });
 
   function byId(id) { return document.getElementById(id); }
   function getAssay(id) { return parseAssay(byId(id).value, fracUnit); }
-  function getMass(id) { return parseMass(byId(id).value, massUnit); }
+  function getMass(id) { return parseMass(byId(id).value, massUnit, massForm); }
   function getNum(id)  { return parseNumeric(byId(id).value); }
 
   const inputParsers = {
@@ -390,7 +458,7 @@ function init() {
           parseAssay(input.value, fracUnit);
           break;
         case 'mass':
-          parseMass(input.value, massUnit);
+          parseMass(input.value, massUnit, massForm);
           break;
         default:
           parseNumeric(input.value);
