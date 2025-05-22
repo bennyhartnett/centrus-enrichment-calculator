@@ -461,6 +461,8 @@ document.addEventListener('DOMContentLoaded', () => {
   byId('clear5').addEventListener('click', () => byId('form5').reset());
 
   renderHistory();
+  const yearEl = document.getElementById('current-year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
 });
 
 export {
