@@ -5,7 +5,13 @@
             "name": "Open HTML in Browser",
             "type": "pwa-chrome",
             "request": "launch",
-            "file": "${workspaceFolder}/enrichment-calculator.html"
+            "url": "http://localhost:8000/enrichment-calculator.html",
+            "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "serve",
+            "serverReadyAction": {
+                "pattern": "Serving HTTP on",
+                "uriFormat": "http://localhost:8000/enrichment-calculator.html"
+            }
         }
     ]
 }
