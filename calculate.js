@@ -369,6 +369,41 @@ function init() {
   function getMass(id) { return parseMass(byId(id).value, massUnit); }
   function getNum(id)  { return parseNumeric(byId(id).value); }
 
+  const inputParsers = {
+    xp1: 'assay', xw1: 'assay', xf1: 'assay',
+    p2: 'mass', xp2: 'assay', xw2: 'assay', xf2: 'assay',
+    F3: 'mass', xp3: 'assay', xw3: 'assay', xf3: 'assay',
+    S4: 'numeric', xp4: 'assay', xw4: 'assay', xf4: 'assay',
+    cf5: 'numeric', cs5: 'numeric', xp5: 'assay', xf5: 'assay'
+  };
+
+  function validateInput(input) {
+    const type = inputParsers[input.id];
+    if (!type) return;
+    if (input.value.trim() === input.defaultValue.trim()) {
+      input.classList.remove('is-valid');
+      return;
+    }
+    try {
+      switch (type) {
+        case 'assay':
+          parseAssay(input.value, fracUnit);
+          break;
+        case 'mass':
+          parseMass(input.value, massUnit);
+          break;
+        default:
+          parseNumeric(input.value);
+      }
+      input.classList.add('is-valid');
+    } catch (_) {
+      input.classList.remove('is-valid');
+    }
+  }
+
+  document.querySelectorAll('form.calculator input:not([readonly])')
+    .forEach(inp => inp.addEventListener('input', () => validateInput(inp)));
+
   // Mode 1 - Feed & SWU for 1 kg
   byId('calc1').addEventListener('click', () => {
     try {
@@ -384,7 +419,13 @@ function init() {
       alert(err.message);
     }
   });
-  byId('clear1').addEventListener('click', () => byId('form1').reset());
+  function resetForm(formId) {
+    const form = byId(formId);
+    form.reset();
+    form.querySelectorAll('input').forEach(i => i.classList.remove('is-valid'));
+  }
+
+  byId('clear1').addEventListener('click', () => resetForm('form1'));
 
   // Mode 2 - Feed & SWU from EUP quantity
   byId('calc2').addEventListener('click', () => {
@@ -402,7 +443,7 @@ function init() {
       alert(err.message);
     }
   });
-  byId('clear2').addEventListener('click', () => byId('form2').reset());
+  byId('clear2').addEventListener('click', () => resetForm('form2'));
 
   // Mode 3 - EUP & SWU from feed quantity
   byId('calc3').addEventListener('click', () => {
@@ -420,7 +461,7 @@ function init() {
       alert(err.message);
     }
   });
-  byId('clear3').addEventListener('click', () => byId('form3').reset());
+  byId('clear3').addEventListener('click', () => resetForm('form3'));
 
   // Mode 4 - Feed & EUP from SWU quantity
   byId('calc4').addEventListener('click', () => {
@@ -438,7 +479,7 @@ function init() {
       alert(err.message);
     }
   });
-  byId('clear4').addEventListener('click', () => byId('form4').reset());
+  byId('clear4').addEventListener('click', () => resetForm('form4'));
 
   // Mode 5 - Optimum tails assay
   byId('calc5').addEventListener('click', () => {
@@ -456,7 +497,7 @@ function init() {
       alert(err.message);
     }
   });
-  byId('clear5').addEventListener('click', () => byId('form5').reset());
+  byId('clear5').addEventListener('click', () => resetForm('form5'));
  
   const yearEl = document.getElementById('current-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
