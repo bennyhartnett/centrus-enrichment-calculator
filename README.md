@@ -25,8 +25,6 @@ A lightweight, browser-based tool for exploring uranium enrichment scenarios. Al
    Then open [`http://localhost:8000/enrichment-calculator.html`](http://localhost:8000/enrichment-calculator.html) in your browser.
    Opening the HTML file directly with the `file://` scheme may trigger strict CORS
    rules in modern browsers and prevent `calculate.js` from loading.
-   If you use VS Code, the included **Open HTML in Browser** launch configuration
-   starts this server automatically and opens the page for you.
 3. Enter your desired inputs and press **Calculate**.
 4. Results are copied to your clipboard and also appear in the history panel.
 
