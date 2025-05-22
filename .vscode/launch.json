@@ -8,22 +8,12 @@
             "module": "http.server",
             "args": ["8000"],
             "console": "integratedTerminal",
-            "python": "py"
-        },
-        {
-            "name": "Open HTML in Browser",
-            "type": "pwa-chrome",
-            "request": "launch",
-            "url": "http://localhost:8000/enrichment-calculator.html"
-        }
-    ],
-    "compounds": [
-        {
-            "name": "Start Server and Browser",
-            "configurations": [
-                "Run HTTP Server",
-                "Open HTML in Browser"
-            ]
+            "python": "py",
+            "serverReadyAction": {
+                "pattern": "http://.*:8000/",
+                "uriFormat": "http://localhost:8000/enrichment-calculator.html",
+                "action": "openExternally"
+            }
         }
     ]
 }
