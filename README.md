@@ -5,7 +5,16 @@
   <img src="assets/centrus-energy-logo.svg" alt="Centrus Energy Logo" width="240"/>
 </p>
 
-A lightweight, client-side tool for exploring uranium enrichment scenarios. The calculators are implemented in plain JavaScript and styled with Bootstrap. All calculations run entirely in the browser so the page can be used offline after the first load. This project is not affiliated with Centrus Energy and is provided solely as a learning resource.
+A lightweight, browser-based tool for exploring uranium enrichment scenarios. All calculations run entirely client-side using plain JavaScript, so the page works offline after the initial load. This project is **not** affiliated with Centrus Energy and is provided only as an educational resource.
+
+## Table of Contents
+- [Getting Started](#getting-started)
+- [Features](#features)
+- [Usage](#usage)
+- [Formulas](#formulas)
+- [Development](#development)
+- [License](#license)
+- [Live Site](#live-site)
 
 ## Getting Started
 1. Clone or download this repository.
@@ -20,11 +29,16 @@ A lightweight, client-side tool for exploring uranium enrichment scenarios. The 
 - **Feed & product from SWU capacity** – calculate material flows when you know the available SWU.
 - **Optimum tails assay** – search for the economic tails assay that minimizes cost per kilogram.
 
-Each calculation copies its result to the clipboard and is logged in a history section for reference.
+Each calculation automatically copies its result to the clipboard and is logged in the on-page history section for later reference.
 
-## Formulas and Calculations
-The calculators implement the standard mass balance and separative work unit (SWU) equations used in the
-nuclear fuel cycle. The key relationships are shown below using MathJax notation.
+## Usage
+Open `enrichment-calculator.html` in your browser and fill in the values for the desired calculation. Press **Calculate** to see the results. Use the **Clear** button to reset a form if needed. No build step or server is required—everything runs entirely in the browser.
+
+## Live Site
+A live demo is available at [bennyhartnett.com/enrichment-calculator.html](https://bennyhartnett.com/enrichment-calculator.html).
+
+## Formulas
+The calculators implement the standard mass balance and separative work unit (SWU) equations used in the nuclear fuel cycle. The key relationships are shown below using MathJax notation.
 
 1. **Value function**
    $$
@@ -51,22 +65,10 @@ nuclear fuel cycle. The key relationships are shown below using MathJax notation
    C = c_f \frac{F}{P} + c_s \frac{\text{SWU}}{P}
    $$
 
-Additional calculators determine output quantities for given feed or SWU capacity and search for the optimum
-tails assay that minimizes the cost per kilogram using a golden-section search algorithm.
-
-## Usage
-Open `enrichment-calculator.html` in your browser and fill in the values for the desired calculation. Press **Calculate** to see the results. Use the Clear button to reset a form if needed. No build step or server is required—everything runs entirely in the browser.
-
-## Live Site
-A live demo is available at [bennyhartnett.com/enrichment-calculator.html](https://bennyhartnett.com/enrichment-calculator.html).
+Additional calculators determine output quantities for given feed or SWU capacity and search for the optimum tails assay that minimizes the cost per kilogram using a golden-section search algorithm.
 
 ## Development
-The algorithms live in [`calculate.js`](calculate.js). Input parsing, error handling and history tracking are included. Bootstrap and Bootstrap Icons are loaded from public CDNs.
-
-Feel free to modify the HTML or JavaScript to suit your needs.
+The algorithms live in [`calculate.js`](calculate.js). Input parsing, error handling and history tracking are included. Bootstrap and Bootstrap Icons are loaded from public CDNs. Feel free to modify the HTML or JavaScript to suit your needs.
 
 ## License
-No license has been specified.
-
-This project is provided as-is for educational use. No warranty or guarantee of accuracy is expressed or implied.
-
+No license has been specified. This project is provided as-is for educational use. No warranty or guarantee of accuracy is expressed or implied.
