@@ -30,8 +30,15 @@ body {
   display: flex;
   justify-content: center;
   min-height: 100vh;
-  transition: background 2s ease;
-  background-size: cover;
+  background: linear-gradient(-45deg, #2ecc71, #1abc9c, #3498db, #1abc9c);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .accordion {
