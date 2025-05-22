@@ -51,6 +51,26 @@ function copyToClipboard(text) {
   navigator.clipboard.writeText(text).catch(err => console.error('Copy failed', err));
 }
 
+/**
+ * parseFraction
+ * Parses a decimal or fraction string like "1/2" into a number.
+ * Returns NaN if parsing fails.
+ * @param {string} str
+ * @returns {number}
+ */
+function parseFraction(str) {
+  str = str.trim();
+  if (str.includes('/')) {
+    const parts = str.split('/');
+    if (parts.length !== 2) return NaN;
+    const num = parseFloat(parts[0]);
+    const den = parseFloat(parts[1]);
+    if (isNaN(num) || isNaN(den) || den === 0) return NaN;
+    return num / den;
+  }
+  return parseFloat(str);
+}
+
 // --- Input Parsers ---
 /**
  * parseAssay
@@ -103,13 +123,13 @@ function parseAssay(raw, unitSelect) {
  */
 function parseMass(raw, unitSelect) {
   raw = raw.trim();
-  const match = raw.match(/^([\d.]+)\s*(kg|g|lb)$/i);
+  const match = raw.match(/^([\d./]+)\s*(kg|g|lb)$/i);
   let num, unit;
   if (match) {
-    num = parseFloat(match[1]);
+    num = parseFraction(match[1]);
     unit = match[2].toLowerCase();
   } else {
-    num = parseFloat(raw);
+    num = parseFraction(raw);
     unit = unitSelect.value;
   }
   if (isNaN(num) || num <= 0) throw new Error('Mass must be a positive number');
@@ -129,7 +149,7 @@ function parseMass(raw, unitSelect) {
  * @throws Error if invalid or ≤ 0
  */
 function parseNumeric(raw) {
-  const val = parseFloat(raw);
+  const val = parseFraction(raw);
   if (isNaN(val) || val <= 0) throw new Error('Value must be a positive number');
   return val;
 }

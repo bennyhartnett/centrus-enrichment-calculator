@@ -38,7 +38,7 @@ A lightweight, browser-based tool for exploring uranium enrichment scenarios. Al
 Each calculation automatically copies its result to the clipboard and is logged in the on-page history section for later reference.
 
 ## Usage
-Open `enrichment-calculator.html` in your browser and fill in the values for the desired calculation. Press **Calculate** to see the results. Use the **Clear** button to reset a form if needed. No build step or server is required—everything runs entirely in the browser.
+Open `enrichment-calculator.html` in your browser and fill in the values for the desired calculation. Press **Calculate** to see the results. Use the **Clear** button to reset a form if needed. All numeric fields accept decimal or fractional input like `1/2`. No build step or server is required—everything runs entirely in the browser.
 
 ## Live Site
 A live demo is available at [bennyhartnett.com/enrichment-calculator.html](https://bennyhartnett.com/enrichment-calculator.html).
