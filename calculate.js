@@ -493,10 +493,6 @@ function init() {
   function validateInput(input) {
     const type = inputParsers[input.id];
     if (!type) return;
-    if (input.value.trim() === input.defaultValue.trim()) {
-      input.classList.remove('is-valid');
-      return;
-    }
     try {
       switch (type) {
         case 'assay':
@@ -519,6 +515,10 @@ function init() {
       validateInput(inp);
       updateCalculateButtons();
     }));
+
+  // Validate all inputs initially so default values get success styling
+  document.querySelectorAll('form.calculator input:not([readonly])')
+    .forEach(inp => validateInput(inp));
 
   function setupSyncFields() {
     const groups = {};
