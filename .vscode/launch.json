@@ -2,10 +2,28 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Run HTTP Server",
+            "type": "python",
+            "request": "launch",
+            "module": "http.server",
+            "args": ["8000"],
+            "console": "integratedTerminal",
+            "python": "py"
+        },
+        {
             "name": "Open HTML in Browser",
             "type": "pwa-chrome",
             "request": "launch",
-            "file": "${workspaceFolder}/enrichment-calculator.html"
+            "url": "http://localhost:8000/enrichment-calculator.html"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Start Server and Browser",
+            "configurations": [
+                "Run HTTP Server",
+                "Open HTML in Browser"
+            ]
         }
     ]
 }
