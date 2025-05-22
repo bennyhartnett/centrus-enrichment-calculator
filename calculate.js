@@ -388,9 +388,18 @@ function init() {
   function getAssay(id) { return parseAssay(byId(id).value, fracUnit); }
   function getMass(id) { return parseMass(byId(id).value, massUnit); }
   function getNum(id)  { return parseNumeric(byId(id).value); }
+  function formValid(id) {
+    const f = byId(id);
+    if (f && !f.checkValidity()) {
+      f.reportValidity();
+      return false;
+    }
+    return true;
+  }
 
   // Mode 1 - Feed & SWU for 1 kg
   byId('calc1').addEventListener('click', () => {
+    if (!formValid('form1')) return;
     try {
       const xp = getAssay('xp1');
       const xw = getAssay('xw1');
@@ -408,6 +417,7 @@ function init() {
 
   // Mode 2 - Feed & SWU from EUP quantity
   byId('calc2').addEventListener('click', () => {
+    if (!formValid('form2')) return;
     try {
       const P = getMass('p2');
       const xp = getAssay('xp2');
@@ -426,6 +436,7 @@ function init() {
 
   // Mode 3 - EUP & SWU from feed quantity
   byId('calc3').addEventListener('click', () => {
+    if (!formValid('form3')) return;
     try {
       const F = getMass('F3');
       const xp = getAssay('xp3');
@@ -444,6 +455,7 @@ function init() {
 
   // Mode 4 - Feed & EUP from SWU quantity
   byId('calc4').addEventListener('click', () => {
+    if (!formValid('form4')) return;
     try {
       const S = getNum('S4');
       const xp = getAssay('xp4');
@@ -462,6 +474,7 @@ function init() {
 
   // Mode 5 - Optimum tails assay
   byId('calc5').addEventListener('click', () => {
+    if (!formValid('form5')) return;
     try {
       const cf = getNum('cf5');
       const cs = getNum('cs5');
