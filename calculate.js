@@ -463,6 +463,9 @@ function init() {
 
   renderHistory();
 
+  const yearEl = document.getElementById('current-year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+}
 
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {
@@ -471,10 +474,6 @@ if (typeof document !== 'undefined') {
     init();
   }
 }
-
-  const yearEl = document.getElementById('current-year');
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
-});
 
 
 export {
