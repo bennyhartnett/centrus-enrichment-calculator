@@ -1,7 +1,15 @@
-.input-group .form-control.w-100 { max-width: 100%; }
-.unit-select, .input-group .form-select.w-auto { width: auto !important; min-width: unset !important; }
+/* Input groups should span the accordion width */
+.input-group.w-100 {
+  width: 100%;
+}
+
+/* Ensure optional unit selectors don't stretch the input group */
+.unit-select,
+.input-group .form-select.w-auto {
+  width: auto !important;
+  min-width: unset !important;
+}
 @media (max-width: 576px) {
-  .input-group .form-control.w-100 { max-width: 100%; }
   .input-group { flex-wrap: wrap; }
   .input-group .input-group-text, .input-group .form-select, .input-group .form-control {
     flex: 1 1 100%;
