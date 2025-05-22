@@ -10,12 +10,15 @@
   min-width: unset !important;
 }
 @media (max-width: 576px) {
-  .input-group { flex-wrap: wrap; }
-  .input-group .input-group-text, .input-group .form-select, .input-group .form-control {
-    flex: 1 1 100%;
-  }
-  .input-group .form-select { margin-top: .5rem; }
+  /* Make accordion and container span the full screen width */
   .accordion { width: 100%; }
+  .container { width: 100%; }
+
+  /* Keep inputs on one line but allow them to shrink */
+  .input-group { flex-wrap: nowrap; width: 100%; }
+  .input-group .input-group-text { flex: 0 0 auto; }
+  .input-group .form-control { flex: 1 1 auto; min-width: 0; }
+  .input-group .form-select { flex: 0 0 auto; width: auto; }
 }
 
 /* Ensure images shrink on small screens */
