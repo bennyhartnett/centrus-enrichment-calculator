@@ -356,54 +356,110 @@ function renderHistory() {
 
 // --- DOM Binding ---
 document.addEventListener('DOMContentLoaded', () => {
-  // Enter-key submission: pressing Enter inside any input triggers its calculator button
+  // Enter key submits the nearest calculator
   document.body.addEventListener('keydown', e => {
     if (e.key === 'Enter' && document.activeElement.tagName === 'INPUT') {
-      const btn = document.activeElement.closest('.calculator').querySelector('button');
+      const btn = document.activeElement.closest('.calculator').querySelector('button.btn-primary');
       if (btn) btn.click();
     }
   });
 
-  // Configuration for each calculator: button ID, function, input specs, output ID, format
-  const configs = [ /* ... same as above ... */ ];
+  const fracUnit = { value: 'fraction' };
+  const massUnit = { value: 'kg' };
 
-  // Attach handlers for each calculator
-  configs.forEach(cfg => {
-    const btn = document.getElementById(cfg.btn);
-    if (!btn) return;
-    const handler = () => {
-      const outEl = document.getElementById(cfg.out);
-      outEl.setAttribute('aria-live', 'polite');
-      outEl.textContent = '';
-      btn.disabled = true;
-      try {
-        // Parse inputs according to their type and unit settings
-        const inputs = cfg.args.map(a => {
-          const raw = document.getElementById(a.id).value;
-          if (a.type === 'assay') return parseAssay(raw, document.getElementById(a.unit));
-          if (a.type === 'mass') return parseMass(raw, document.getElementById(a.unit));
-          return parseNumeric(raw);
-        });
-        // Perform calculation
-        const res = cfg.fn(...inputs);
-        // Format result text
-        const text = cfg.format(res);
-        // Display, copy, and record
-        outEl.textContent = text;
-        copyToClipboard(text);
-        recordHistory(cfg.btn, inputs, res);
-      } catch (err) {
-        console.error(err);
-        outEl.textContent = `Error: ${err.message}`;
-      } finally {
-        btn.disabled = false;
-      }
-    };
-    // Debounce click to protect performance
-    btn.addEventListener('click', debounce(handler, 300));
+  function byId(id) { return document.getElementById(id); }
+  function getAssay(id) { return parseAssay(byId(id).value, fracUnit); }
+  function getMass(id) { return parseMass(byId(id).value, massUnit); }
+  function getNum(id)  { return parseNumeric(byId(id).value); }
+
+  // Mode 1 - Feed & SWU for 1 kg
+  byId('calc1').addEventListener('click', () => {
+    try {
+      const xp = getAssay('xp1');
+      const xw = getAssay('xw1');
+      const xf = getAssay('xf1');
+      const res = computeFeedSwuForOneKg(xp, xw, xf);
+      byId('feed1').value = res.F.toFixed(6);
+      byId('swu1').value = res.swu.toFixed(3);
+      copyToClipboard(`${res.F.toFixed(6)} kg, ${res.swu.toFixed(3)} SWU`);
+      recordHistory('mode1', { xp, xw, xf }, res);
+    } catch (err) {
+      alert(err.message);
+    }
   });
+  byId('clear1').addEventListener('click', () => byId('form1').reset());
 
-  // Initial render of empty history
+  // Mode 2 - Feed & SWU from EUP quantity
+  byId('calc2').addEventListener('click', () => {
+    try {
+      const P = getMass('p2');
+      const xp = getAssay('xp2');
+      const xw = getAssay('xw2');
+      const xf = getAssay('xf2');
+      const res = computeFeedSwu(xp, xw, xf, P);
+      byId('feed2').value = res.F.toFixed(6);
+      byId('swu2').value = res.swu.toFixed(3);
+      copyToClipboard(`${res.F.toFixed(6)} kg, ${res.swu.toFixed(3)} SWU`);
+      recordHistory('mode2', { P, xp, xw, xf }, res);
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+  byId('clear2').addEventListener('click', () => byId('form2').reset());
+
+  // Mode 3 - EUP & SWU from feed quantity
+  byId('calc3').addEventListener('click', () => {
+    try {
+      const F = getMass('F3');
+      const xp = getAssay('xp3');
+      const xw = getAssay('xw3');
+      const xf = getAssay('xf3');
+      const res = computeEupSwu(xp, xw, xf, F);
+      byId('P3').value = res.P.toFixed(6);
+      byId('swu3').value = res.swu.toFixed(3);
+      copyToClipboard(`${res.P.toFixed(6)} kg, ${res.swu.toFixed(3)} SWU`);
+      recordHistory('mode3', { F, xp, xw, xf }, res);
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+  byId('clear3').addEventListener('click', () => byId('form3').reset());
+
+  // Mode 4 - Feed & EUP from SWU quantity
+  byId('calc4').addEventListener('click', () => {
+    try {
+      const S = getNum('S4');
+      const xp = getAssay('xp4');
+      const xw = getAssay('xw4');
+      const xf = getAssay('xf4');
+      const res = computeFeedEupFromSwu(xp, xw, xf, S);
+      byId('P4').value = res.P.toFixed(6);
+      byId('feed4').value = res.F.toFixed(6);
+      copyToClipboard(`${res.P.toFixed(6)} kg, ${res.F.toFixed(6)} kg feed`);
+      recordHistory('mode4', { S, xp, xw, xf }, res);
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+  byId('clear4').addEventListener('click', () => byId('form4').reset());
+
+  // Mode 5 - Optimum tails assay
+  byId('calc5').addEventListener('click', () => {
+    try {
+      const cf = getNum('cf5');
+      const cs = getNum('cs5');
+      const xp = getAssay('xp5');
+      const xf = getAssay('xf5');
+      const res = findOptimumTails(xp, xf, cf, cs);
+      byId('xw5').value = res.xw.toFixed(6);
+      copyToClipboard(`${res.xw.toFixed(6)} fraction`);
+      recordHistory('mode5', { cf, cs, xp, xf }, res);
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+  byId('clear5').addEventListener('click', () => byId('form5').reset());
+
   renderHistory();
 });
 
