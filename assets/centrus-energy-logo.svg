@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120">
-  <style>
-    .name { font-family: Arial, Helvetica, sans-serif; fill: #003366; font-size: 72px; }
-    .tagline { font-family: Arial, Helvetica, sans-serif; fill: #0072ce; font-size: 32px; }
-  </style>
-  <text x="50%" y="70" text-anchor="middle" dominant-baseline="middle" class="name">Centrus</text>
-  <text x="50%" y="110" text-anchor="middle" dominant-baseline="middle" class="tagline">ENERGY</text>
-</svg>
