@@ -45,3 +45,12 @@ body {
   width: 60%;
   margin: 0 auto;
 }
+
+footer {
+  color: #fff;
+}
+
+footer a {
+  color: #fff;
+  text-decoration: underline;
+}
