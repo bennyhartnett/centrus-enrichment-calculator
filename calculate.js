@@ -246,11 +246,43 @@ function computeFeedSwu(xp, xw, xf, P) {
   if (!(xp > xf && xf > xw)) {
     throw new Error('Assay relationship must satisfy xp > xf > xw');
   }
-  const { F, W } = massBalance(P, xp, xf, xw);
+  const F = P * (xp - xw) / (xf - xw);
+  const W = F - P;
   const swu = P * valueFunction(xp)
             + W * valueFunction(xw)
             - F * valueFunction(xf);
   return { F, W, swu };
+}
+
+/**
+ * calcFeedAndSwu
+ * Direct implementation of the Python reference `calc_feed_and_swu`.
+ * Accepts assays in percent just like the Python version and returns feed
+ * mass and SWU for a desired product quantity.
+ * @param {number} productQuantityKgU - product mass in kilograms of uranium
+ * @param {number} productAssayPercent - product assay in percent U‑235
+ * @param {number} feedAssayPercent - feed assay in percent U‑235
+ * @param {number} tailsAssayPercent - tails assay in percent U‑235
+ * @returns {{feed:number, swu:number}}
+ */
+function calcFeedAndSwu(productQuantityKgU,
+                        productAssayPercent,
+                        feedAssayPercent = 0.711,
+                        tailsAssayPercent = 0.23) {
+  const xp = productAssayPercent / 100;
+  const xf = feedAssayPercent / 100;
+  const xw = tailsAssayPercent / 100;
+
+  if (!(xp > xf && xf > xw)) {
+    throw new Error('Assay relationship must satisfy xp > xf > xw');
+  }
+
+  const feed = productQuantityKgU * (xp - xw) / (xf - xw);
+  const tails = feed - productQuantityKgU;
+  const swu = productQuantityKgU * valueFunction(xp)
+            + tails * valueFunction(xw)
+            - feed * valueFunction(xf);
+  return { feed, swu };
 }
 
 /**
@@ -690,6 +722,7 @@ if (typeof document !== 'undefined') {
 export {
   computeFeedSwuForOneKg,
   computeFeedSwu,
+  calcFeedAndSwu,
   computeEupSwu,
   computeFeedEupFromSwu,
   findOptimumTails
