@@ -47,7 +47,7 @@ in the browser:
 - **Input validation** – calculate buttons stay disabled until all inputs are
   valid, and hovering over a disabled button highlights fields with errors.
 
-Inputs accept percentages or fractions for assays, and numeric fields such as SWU or price can also use fraction syntax. After each calculation the result is automatically copied to your clipboard. Valid entries turn green while any errors are shown using SweetAlert2 dialogs. The page continues to work offline after the initial load and the responsive layout—with an animated gradient background—works well on mobile devices. Pressing **Enter** triggers the nearest calculator.
+Assay inputs use percentages, and numeric fields such as SWU or price can still use fraction syntax. After each calculation the result is automatically copied to your clipboard. Valid entries turn green while any errors are shown using SweetAlert2 dialogs. The page continues to work offline after the initial load and the responsive layout—with an animated gradient background—works well on mobile devices. Pressing **Enter** triggers the nearest calculator.
 
 ## Usage
 Open `enrichment-calculator.html` in your browser and fill in the values for the desired calculation. Press **Calculate** to see the results. Use the **Clear** button to reset a form if needed. All numeric fields accept decimal or fractional input like `1/2`. No build step or server is required—everything runs entirely in the browser.

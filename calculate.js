@@ -89,33 +89,14 @@ function parseFraction(str) {
  * @returns {number} fraction value
  * @throws Error if parse fails or value out of range
  */
-function parseAssay(raw, unitSelect) {
+function parseAssay(raw) {
   raw = raw.trim();
-  let num;
-  // Support "n/d" fraction syntax
-  if (raw.includes('/')) {
-    const parts = raw.split('/').map(parseFloat);
-    if (parts.length !== 2 || isNaN(parts[0]) || isNaN(parts[1]) || parts[1] === 0) {
-      throw new Error('Invalid fraction for assay');
-    }
-    num = parts[0] / parts[1];
-    unitSelect = { value: 'fraction' }; // override unit
-  }
-  // Support percentage syntax ending with '%'
-  else if (/^\d+(\.\d+)?%$/.test(raw)) {
-    num = parseFloat(raw.slice(0, -1));
-    unitSelect = { value: 'percent' };
-  }
-  // Otherwise, treat as direct decimal or use unit selector
-  else {
-    num = parseFloat(raw);
-  }
+  if (raw.endsWith('%')) raw = raw.slice(0, -1);
+  const num = parseFloat(raw);
   if (isNaN(num)) throw new Error('Invalid assay input');
-  // Convert percent to fraction if needed
-  const frac = unitSelect.value === 'percent' ? num / 100 : num;
-  // Ensure fraction is within (0,1)
+  const frac = num / 100;
   if (!(frac > EPS && frac < 1 - EPS)) {
-    throw new Error('Assay must be between 0 and 1 (exclusive)');
+    throw new Error('Assay must be between 0 and 100 (exclusive)');
   }
   return frac;
 }
@@ -407,12 +388,10 @@ function init() {
     }
   });
 
-  const fracUnit = { value: 'percent' };
   const massUnit = { value: 'kg' };
   const massForm = { value: 'UF₆' };
 
   let massMode = 0; // index into MASS_STATES
-  let assayPercent = true;
 
   const MASS_STATES = [
     { unit: 'kg', form: 'UF₆' },
@@ -452,26 +431,12 @@ function init() {
     span.addEventListener('click', toggleMass);
   });
 
-  function toggleAssay() {
-    const factor = assayPercent ? 0.01 : 100;
-    assayPercent = !assayPercent;
-    fracUnit.value = assayPercent ? 'percent' : 'fraction';
-    document.querySelectorAll('.assay-unit').forEach(s => {
-      s.textContent = assayPercent ? '% ²³⁵U' : 'fraction';
-    });
-    document.querySelectorAll('input.assay-field').forEach(inp => {
-      const val = parseFraction(inp.value);
-      if (!isNaN(val)) inp.value = (val * factor).toFixed(5);
-    });
-  }
-
   document.querySelectorAll('.assay-unit').forEach(span => {
-    span.style.cursor = 'pointer';
-    span.addEventListener('click', toggleAssay);
+    span.textContent = '% ²³⁵U';
   });
 
   function byId(id) { return document.getElementById(id); }
-  function getAssay(id) { return parseAssay(byId(id).value, fracUnit); }
+  function getAssay(id) { return parseAssay(byId(id).value); }
   function getMass(id) { return parseMass(byId(id).value, massUnit, massForm); }
   function getNum(id)  { return parseNumeric(byId(id).value); }
 
@@ -496,7 +461,7 @@ function init() {
       try {
         switch (type) {
           case 'assay':
-            parseAssay(inp.value, fracUnit);
+            parseAssay(inp.value);
             break;
           case 'mass':
             parseMass(inp.value, massUnit, massForm);
@@ -533,7 +498,7 @@ function init() {
     try {
       switch (type) {
         case 'assay':
-          parseAssay(input.value, fracUnit);
+          parseAssay(input.value);
           break;
         case 'mass':
           parseMass(input.value, massUnit, massForm);
@@ -684,15 +649,9 @@ function init() {
       const xp = getAssay('xp5');
       const xf = getAssay('xf5');
       const res = findOptimumTails(xp, xf, cf, cs);
-      const val = assayPercent ? res.xw * 100 : res.xw;
-      byId('xw5').value = assayPercent
-        ? val.toFixed(3)
-        : val.toFixed(5);
-      copyToClipboard(
-        assayPercent
-          ? `${val.toFixed(3)} %`
-          : val.toFixed(5)
-      );
+      const val = res.xw * 100;
+      byId('xw5').value = val.toFixed(3);
+      copyToClipboard(`${val.toFixed(3)} %`);
      
     } catch (err) {
       Swal.fire({ icon: 'error', title: 'Error', text: err.message });
