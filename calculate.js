@@ -380,65 +380,6 @@ function init() {
   const massUnit = { value: 'kg' };
   const massForm = { value: 'UF₆' };
 
-  let massMode = 0; // index into MASS_STATES
-  let assayPercent = false;
-
-  const MASS_STATES = [
-    { unit: 'kg', form: 'UF₆' },
-    { unit: 'lb', form: 'UF₆' },
-    { unit: 'kg', form: 'U₃O₈' },
-    { unit: 'lb', form: 'U₃O₈' },
-    { unit: 'kg', form: 'U metal' },
-    { unit: 'lb', form: 'U metal' }
-  ];
-
-  function applyMassMode(prev, next) {
-    const from = MASS_STATES[prev];
-    const to = MASS_STATES[next];
-    massUnit.value = to.unit;
-    massForm.value = to.form;
-    document.querySelectorAll('.mass-unit').forEach(s => {
-      s.textContent = to.form === 'U metal'
-        ? `${to.unit} U`
-        : `${to.unit} ${to.form}`;
-    });
-    const factor = UNIT_FACTORS[to.unit] / UNIT_FACTORS[from.unit]
-                * FORM_FACTORS[to.form] / FORM_FACTORS[from.form];
-    document.querySelectorAll('input.mass-field').forEach(inp => {
-      const val = parseFraction(inp.value);
-      if (!isNaN(val)) inp.value = (val * factor).toFixed(6);
-    });
-  }
-
-  function toggleMass() {
-    const prev = massMode;
-    massMode = (massMode + 1) % MASS_STATES.length;
-    applyMassMode(prev, massMode);
-  }
-
-  document.querySelectorAll('.mass-unit').forEach(span => {
-    span.style.cursor = 'pointer';
-    span.addEventListener('click', toggleMass);
-  });
-
-  function toggleAssay() {
-    const factor = assayPercent ? 0.01 : 100;
-    assayPercent = !assayPercent;
-    fracUnit.value = assayPercent ? 'percent' : 'fraction';
-    document.querySelectorAll('.assay-unit').forEach(s => {
-      s.textContent = assayPercent ? '% ²³⁵U' : 'fraction';
-    });
-    document.querySelectorAll('input.assay-field').forEach(inp => {
-      const val = parseFraction(inp.value);
-      if (!isNaN(val)) inp.value = (val * factor).toFixed(5);
-    });
-  }
-
-  document.querySelectorAll('.assay-unit').forEach(span => {
-    span.style.cursor = 'pointer';
-    span.addEventListener('click', toggleAssay);
-  });
-
   function byId(id) { return document.getElementById(id); }
   function getAssay(id) { return parseAssay(byId(id).value, fracUnit); }
   function getMass(id) { return parseMass(byId(id).value, massUnit, massForm); }
