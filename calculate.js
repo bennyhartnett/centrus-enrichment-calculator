@@ -375,12 +375,12 @@ function init() {
     }
   });
 
-  const fracUnit = { value: 'fraction' };
+  const fracUnit = { value: 'percent' };
   const massUnit = { value: 'kg' };
   const massForm = { value: 'UF₆' };
 
   let massMode = 0; // index into MASS_STATES
-  let assayPercent = false;
+  let assayPercent = true;
 
   const MASS_STATES = [
     { unit: 'kg', form: 'UF₆' },
