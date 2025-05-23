@@ -652,9 +652,15 @@ function init() {
       const xp = getAssay('xp5');
       const xf = getAssay('xf5');
       const res = findOptimumTails(xp, xf, cf, cs);
-      const xwPercent = res.xw * 100;
-      byId('xw5').value = xwPercent.toFixed(3);
-      copyToClipboard(`${xwPercent.toFixed(3)} %`);
+      const val = assayPercent ? res.xw * 100 : res.xw;
+      byId('xw5').value = assayPercent
+        ? val.toFixed(3)
+        : val.toFixed(5);
+      copyToClipboard(
+        assayPercent
+          ? `${val.toFixed(3)} %`
+          : val.toFixed(5)
+      );
      
     } catch (err) {
       Swal.fire({ icon: 'error', title: 'Error', text: err.message });
