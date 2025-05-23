@@ -338,11 +338,7 @@ function init() {
     if (e.key === 'Enter' && document.activeElement.tagName === 'INPUT') {
       const form = document.activeElement.closest('.calculator');
       const btn = form && form.querySelector('button.btn-primary');
-      if (btn && !btn.disabled) {
-        btn.click();
-      } else if (btn && btn.disabled) {
-        highlightInvalid(form, true);
-      }
+      if (btn) btn.click();
     }
   });
 
@@ -376,45 +372,6 @@ function init() {
     cf5: 'numeric', cs5: 'numeric', xp5: 'assay', xf5: 'assay'
   };
 
-  function checkFormValidity(form) {
-    let valid = true;
-    const invalid = [];
-    form.querySelectorAll('input[id]:not([readonly])').forEach(inp => {
-      const type = inputParsers[inp.id];
-      if (!type) return;
-      try {
-        switch (type) {
-          case 'assay':
-            parseAssay(inp.value);
-            break;
-          case 'mass':
-            parseMass(inp.value);
-            break;
-          default:
-            parseNumeric(inp.value);
-        }
-      } catch (_) {
-        valid = false;
-        invalid.push(inp);
-      }
-    });
-    return { valid, invalid };
-  }
-
-  function updateCalculateButtons() {
-    document.querySelectorAll('form.calculator').forEach(form => {
-      const { valid } = checkFormValidity(form);
-      const btn = form.querySelector('button.btn-primary');
-      if (btn) btn.disabled = !valid;
-    });
-  }
-
-  function highlightInvalid(form, on) {
-    form.querySelectorAll('input.is-invalid').forEach(i => i.classList.remove('is-invalid'));
-    if (!on) return;
-    const { invalid } = checkFormValidity(form);
-    invalid.forEach(inp => inp.classList.add('is-invalid'));
-  }
 
   function validateInput(input) {
     const type = inputParsers[input.id];
@@ -439,7 +396,6 @@ function init() {
   document.querySelectorAll('form.calculator input:not([readonly])')
     .forEach(inp => inp.addEventListener('input', () => {
       validateInput(inp);
-      updateCalculateButtons();
     }));
 
   // Validate all inputs initially so default values get success styling
@@ -473,16 +429,6 @@ function init() {
   }
 
   setupSyncFields();
-  updateCalculateButtons();
-
-  document.querySelectorAll('form.calculator').forEach(form => {
-    const btn = form.querySelector('button.btn-primary');
-    if (!btn) return;
-    btn.addEventListener('mouseenter', () => {
-      if (btn.disabled) highlightInvalid(form, true);
-    });
-    btn.addEventListener('mouseleave', () => highlightInvalid(form, false));
-  });
 
   // Mode 1 - Feed & SWU for 1 kg
   byId('calc1').addEventListener('click', () => {
@@ -506,7 +452,6 @@ function init() {
       i.value = '';
       i.classList.remove('is-valid', 'is-invalid');
     });
-    updateCalculateButtons();
   }
 
   byId('clear1').addEventListener('click', () => resetForm('form1'));

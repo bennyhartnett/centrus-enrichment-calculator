@@ -44,8 +44,6 @@ in the browser:
   the available SWU.
 - **Optimum tails assay** – search for the economic tails assay that minimizes
   cost per kilogram using a golden‑section search.
-- **Input validation** – calculate buttons stay disabled until all inputs are
-  valid, and hovering over a disabled button highlights fields with errors.
 
 Assay inputs use percentages. After each calculation the result is automatically copied to your clipboard. Valid entries turn green while any errors are shown using SweetAlert2 dialogs. The page continues to work offline after the initial load and the responsive layout—with an animated gradient background—works well on mobile devices. Pressing **Enter** triggers the nearest calculator.
 
