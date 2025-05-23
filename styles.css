@@ -9,17 +9,6 @@
   width: auto !important;
   min-width: unset !important;
 }
-@media (max-width: 576px) {
-  /* Make accordion and container span the full screen width */
-  .accordion { width: 100%; }
-  .container { width: 100%; }
-
-  /* Keep inputs on one line but allow them to shrink */
-  .input-group { flex-wrap: nowrap; width: 100%; }
-  .input-group .input-group-text { flex: 0 0 auto; }
-  .input-group .form-control { flex: 1 1 auto; min-width: 0; }
-  .input-group .form-select { flex: 0 0 auto; width: auto; }
-}
 
 /* Ensure images shrink on small screens */
 img {
@@ -62,6 +51,20 @@ body {
   width: 60%;
   margin: 0 auto;
   overflow-anchor: none; /* reduce scroll jumpiness on toggle */
+}
+
+/* On small screens make the card and accordion span the full width */
+@media (max-width: 576px) {
+  .container,
+  .accordion {
+    width: 100%;
+  }
+
+  /* Keep inputs on one line but allow them to shrink */
+  .input-group { flex-wrap: nowrap; width: 100%; }
+  .input-group .input-group-text { flex: 0 0 auto; }
+  .input-group .form-control { flex: 1 1 auto; min-width: 0; }
+  .input-group .form-select { flex: 0 0 auto; width: auto; }
 }
 
 footer {
