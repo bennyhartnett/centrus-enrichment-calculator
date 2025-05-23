@@ -398,7 +398,9 @@ function init() {
     massUnit.value = to.unit;
     massForm.value = to.form;
     document.querySelectorAll('.mass-unit').forEach(s => {
-      s.textContent = `${to.unit} ${to.form}`;
+      s.textContent = to.form === 'U metal'
+        ? `${to.unit} U`
+        : `${to.unit} ${to.form}`;
     });
     const factor = UNIT_FACTORS[to.unit] / UNIT_FACTORS[from.unit]
                 * FORM_FACTORS[to.form] / FORM_FACTORS[from.form];
@@ -441,6 +443,11 @@ function init() {
   function getAssay(id) { return parseAssay(byId(id).value, fracUnit); }
   function getMass(id) { return parseMass(byId(id).value, massUnit, massForm); }
   function getNum(id)  { return parseNumeric(byId(id).value); }
+
+  function toDisplayMass(kgU) {
+    const kgForm = kgU * FORM_FACTORS[massForm.value];
+    return formatMass(kgForm, massUnit.value).replace(/ .*/, '');
+  }
 
   const inputParsers = {
     xp1: 'assay', xw1: 'assay', xf1: 'assay',
@@ -593,9 +600,9 @@ function init() {
       const xw = getAssay('xw2');
       const xf = getAssay('xf2');
       const res = computeFeedSwu(xp, xw, xf, P);
-      byId('feed2').value = res.F.toFixed(6);
+      byId('feed2').value = toDisplayMass(res.F);
       byId('swu2').value = res.swu.toFixed(3);
-      copyToClipboard(`${res.F.toFixed(6)} kg, ${res.swu.toFixed(3)} SWU`);
+      copyToClipboard(`${toDisplayMass(res.F)} ${massForm.value}, ${res.swu.toFixed(3)} SWU`);
       
     } catch (err) {
       Swal.fire({ icon: 'error', title: 'Error', text: err.message });
@@ -611,9 +618,9 @@ function init() {
       const xw = getAssay('xw3');
       const xf = getAssay('xf3');
       const res = computeEupSwu(xp, xw, xf, F);
-      byId('P3').value = res.P.toFixed(6);
+      byId('P3').value = toDisplayMass(res.P);
       byId('swu3').value = res.swu.toFixed(3);
-      copyToClipboard(`${res.P.toFixed(6)} kg, ${res.swu.toFixed(3)} SWU`);
+      copyToClipboard(`${toDisplayMass(res.P)} ${massForm.value}, ${res.swu.toFixed(3)} SWU`);
        
     } catch (err) {
       Swal.fire({ icon: 'error', title: 'Error', text: err.message });
@@ -630,8 +637,8 @@ function init() {
       const xf = getAssay('xf4');
       const res = computeFeedEupFromSwu(xp, xw, xf, S);
       byId('P4').value = res.P.toFixed(6);
-      byId('feed4').value = res.F.toFixed(6);
-      copyToClipboard(`${res.P.toFixed(6)} kg, ${res.F.toFixed(6)} kg feed`);
+      byId('feed4').value = toDisplayMass(res.F);
+      copyToClipboard(`${res.P.toFixed(6)} kg, ${toDisplayMass(res.F)} ${massForm.value} feed`);
        
     } catch (err) {
       Swal.fire({ icon: 'error', title: 'Error', text: err.message });
@@ -642,7 +649,7 @@ function init() {
   // Mode 5 - Optimum tails assay
   byId('calc5').addEventListener('click', () => {
     try {
-      const cf = getNum('cf5');
+      const cf = getNum('cf5') / FORM_FACTORS[massForm.value];
       const cs = getNum('cs5');
       const xp = getAssay('xp5');
       const xf = getAssay('xf5');
