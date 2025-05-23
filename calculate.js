@@ -22,8 +22,7 @@ const EPS = 1e-9;
 const MAX_ITER = 100;
 // In-memory record of the last 20 calculations
 
-// Conversion factors for unit toggling
-const UNIT_FACTORS = { kg: 1, lb: 2.20462262185 };
+// Conversion factors for UF₆ to U mass
 const FORM_FACTORS = {
   'UF₆': 352.019328978 / 238.02891,
   'U₃O₈': 842.07873 / (3 * 238.02891),
@@ -67,16 +66,7 @@ function copyToClipboard(text) {
  * @returns {number}
  */
 function parseFraction(str) {
-  str = str.trim();
-  if (str.includes('/')) {
-    const parts = str.split('/');
-    if (parts.length !== 2) return NaN;
-    const num = parseFloat(parts[0]);
-    const den = parseFloat(parts[1]);
-    if (isNaN(num) || isNaN(den) || den === 0) return NaN;
-    return num / den;
-  }
-  return parseFloat(str);
+  return parseFloat(str.trim());
 }
 
 // --- Input Parsers ---
@@ -110,24 +100,9 @@ function parseAssay(raw) {
  * @returns {number} mass in kg
  * @throws Error if invalid or non-positive
  */
-function parseMass(raw, unitSelect, formSelect = { value: 'UF₆' }) {
-  raw = raw.trim();
-  const match = raw.match(/^([\d./]+)\s*(kg|g|lb)$/i);
-  let num, unit;
-  if (match) {
-    num = parseFraction(match[1]);
-    unit = match[2].toLowerCase();
-  } else {
-    num = parseFraction(raw);
-    unit = unitSelect.value;
-  }
+function parseMass(raw) {
+  const num = parseFloat(raw.trim());
   if (isNaN(num) || num <= 0) throw new Error('Mass must be a positive number');
-  switch (unit) {
-    case 'kg': break;
-    case 'g': num /= 1000; break;
-    case 'lb': num *= 0.45359237; break;
-    default: throw new Error('Unsupported mass unit: ' + unit);
-  }
   return num;
 }
 
@@ -139,26 +114,9 @@ function parseMass(raw, unitSelect, formSelect = { value: 'UF₆' }) {
  * @throws Error if invalid or ≤ 0
  */
 function parseNumeric(raw) {
-  const val = parseFraction(raw);
+  const val = parseFloat(raw.trim());
   if (isNaN(val) || val <= 0) throw new Error('Value must be a positive number');
   return val;
-}
-
-// --- Output Formatter ---
-/**
- * formatMass
- * Formats a mass in kilograms into the specified unit string.
- * @param {number} kg - mass in kilograms
- * @param {string} unit - 'kg', 'g', or 'lb'
- * @returns {string} formatted mass
- */
-function formatMass(kg, unit) {
-  switch (unit) {
-    case 'kg': return `${kg.toFixed(6)} kg`;
-    case 'g': return `${(kg * 1000).toFixed(3)} g`;
-    case 'lb': return `${(kg / 0.45359237).toFixed(6)} lb`;
-    default: throw new Error('Unsupported mass unit: ' + unit);
-  }
 }
 
 // --- Core Mathematical Functions ---
@@ -380,55 +338,17 @@ function init() {
     if (e.key === 'Enter' && document.activeElement.tagName === 'INPUT') {
       const form = document.activeElement.closest('.calculator');
       const btn = form && form.querySelector('button.btn-primary');
-      if (btn && !btn.disabled) {
-        btn.click();
-      } else if (btn && btn.disabled) {
-        highlightInvalid(form, true);
-      }
+      if (btn) btn.click();
     }
   });
 
-  const massUnit = { value: 'kg' };
-  const massForm = { value: 'UF₆' };
-
-  let massMode = 0; // index into MASS_STATES
-
-  const MASS_STATES = [
-    { unit: 'kg', form: 'UF₆' },
-    { unit: 'lb', form: 'UF₆' },
-    { unit: 'kg', form: 'U₃O₈' },
-    { unit: 'lb', form: 'U₃O₈' },
-    { unit: 'kg', form: 'U metal' },
-    { unit: 'lb', form: 'U metal' }
-  ];
-
-  function applyMassMode(prev, next) {
-    const from = MASS_STATES[prev];
-    const to = MASS_STATES[next];
-    massUnit.value = to.unit;
-    massForm.value = to.form;
-    document.querySelectorAll('.mass-unit').forEach(s => {
-      s.textContent = to.form === 'U metal'
-        ? `${to.unit} U`
-        : `${to.unit} ${to.form}`;
-    });
-    const factor = UNIT_FACTORS[to.unit] / UNIT_FACTORS[from.unit]
-                * FORM_FACTORS[to.form] / FORM_FACTORS[from.form];
-    document.querySelectorAll('input.mass-field').forEach(inp => {
-      const val = parseFraction(inp.value);
-      if (!isNaN(val)) inp.value = (val * factor).toFixed(6);
-    });
-  }
-
-  function toggleMass() {
-    const prev = massMode;
-    massMode = (massMode + 1) % MASS_STATES.length;
-    applyMassMode(prev, massMode);
-  }
+  const massUnit = 'kg';
+  const massForm = 'UF₆';
 
   document.querySelectorAll('.mass-unit').forEach(span => {
-    span.style.cursor = 'pointer';
-    span.addEventListener('click', toggleMass);
+    span.textContent = massForm === 'U metal'
+      ? `${massUnit} U`
+      : `${massUnit} ${massForm}`;
   });
 
   document.querySelectorAll('.assay-unit').forEach(span => {
@@ -437,11 +357,11 @@ function init() {
 
   function byId(id) { return document.getElementById(id); }
   function getAssay(id) { return parseAssay(byId(id).value); }
-  function getMass(id) { return parseMass(byId(id).value, massUnit, massForm); }
+  function getMass(id) { return parseMass(byId(id).value); }
   function getNum(id)  { return parseNumeric(byId(id).value); }
 
   function toDisplayMass(kgU) {
-    return formatMass(kgU, massUnit.value).replace(/ .*/, '');
+    return kgU.toFixed(6);
   }
 
   const inputParsers = {
@@ -452,46 +372,6 @@ function init() {
     cf5: 'numeric', cs5: 'numeric', xp5: 'assay', xf5: 'assay'
   };
 
-  function checkFormValidity(form) {
-    let valid = true;
-    const invalid = [];
-    form.querySelectorAll('input[id]:not([readonly])').forEach(inp => {
-      const type = inputParsers[inp.id];
-      if (!type) return;
-      try {
-        switch (type) {
-          case 'assay':
-            parseAssay(inp.value);
-            break;
-          case 'mass':
-            parseMass(inp.value, massUnit, massForm);
-            break;
-          default:
-            parseNumeric(inp.value);
-        }
-      } catch (_) {
-        valid = false;
-        invalid.push(inp);
-      }
-    });
-    return { valid, invalid };
-  }
-
-  function updateCalculateButtons() {
-    document.querySelectorAll('form.calculator').forEach(form => {
-      const { valid } = checkFormValidity(form);
-      const btn = form.querySelector('button.btn-primary');
-      if (btn) btn.disabled = !valid;
-    });
-  }
-
-  function highlightInvalid(form, on) {
-    form.querySelectorAll('input.is-invalid').forEach(i => i.classList.remove('is-invalid'));
-    if (!on) return;
-    const { invalid } = checkFormValidity(form);
-    invalid.forEach(inp => inp.classList.add('is-invalid'));
-  }
-
   function validateInput(input) {
     const type = inputParsers[input.id];
     if (!type) return;
@@ -501,7 +381,7 @@ function init() {
           parseAssay(input.value);
           break;
         case 'mass':
-          parseMass(input.value, massUnit, massForm);
+          parseMass(input.value);
           break;
         default:
           parseNumeric(input.value);
@@ -515,7 +395,6 @@ function init() {
   document.querySelectorAll('form.calculator input:not([readonly])')
     .forEach(inp => inp.addEventListener('input', () => {
       validateInput(inp);
-      updateCalculateButtons();
     }));
 
   // Validate all inputs initially so default values get success styling
@@ -549,16 +428,6 @@ function init() {
   }
 
   setupSyncFields();
-  updateCalculateButtons();
-
-  document.querySelectorAll('form.calculator').forEach(form => {
-    const btn = form.querySelector('button.btn-primary');
-    if (!btn) return;
-    btn.addEventListener('mouseenter', () => {
-      if (btn.disabled) highlightInvalid(form, true);
-    });
-    btn.addEventListener('mouseleave', () => highlightInvalid(form, false));
-  });
 
   // Mode 1 - Feed & SWU for 1 kg
   byId('calc1').addEventListener('click', () => {
@@ -582,7 +451,6 @@ function init() {
       i.value = '';
       i.classList.remove('is-valid', 'is-invalid');
     });
-    updateCalculateButtons();
   }
 
   byId('clear1').addEventListener('click', () => resetForm('form1'));
@@ -597,7 +465,7 @@ function init() {
       const res = computeFeedSwu(xp, xw, xf, P);
       byId('feed2').value = toDisplayMass(res.F);
       byId('swu2').value = res.swu.toFixed(3);
-      copyToClipboard(`${toDisplayMass(res.F)} ${massForm.value}, ${res.swu.toFixed(3)} SWU`);
+      copyToClipboard(`${toDisplayMass(res.F)} ${massForm}, ${res.swu.toFixed(3)} SWU`);
       
     } catch (err) {
       Swal.fire({ icon: 'error', title: 'Error', text: err.message });
@@ -615,7 +483,7 @@ function init() {
       const res = computeEupSwu(xp, xw, xf, F);
       byId('P3').value = toDisplayMass(res.P);
       byId('swu3').value = res.swu.toFixed(3);
-      copyToClipboard(`${toDisplayMass(res.P)} ${massForm.value}, ${res.swu.toFixed(3)} SWU`);
+      copyToClipboard(`${toDisplayMass(res.P)} ${massForm}, ${res.swu.toFixed(3)} SWU`);
        
     } catch (err) {
       Swal.fire({ icon: 'error', title: 'Error', text: err.message });
@@ -633,7 +501,7 @@ function init() {
       const res = computeFeedEupFromSwu(xp, xw, xf, S);
       byId('P4').value = res.P.toFixed(6);
       byId('feed4').value = toDisplayMass(res.F);
-      copyToClipboard(`${res.P.toFixed(6)} kg, ${toDisplayMass(res.F)} ${massForm.value} feed`);
+      copyToClipboard(`${res.P.toFixed(6)} kg, ${toDisplayMass(res.F)} ${massForm} feed`);
        
     } catch (err) {
       Swal.fire({ icon: 'error', title: 'Error', text: err.message });
@@ -644,7 +512,7 @@ function init() {
   // Mode 5 - Optimum tails assay
   byId('calc5').addEventListener('click', () => {
     try {
-      const cf = getNum('cf5') / FORM_FACTORS[massForm.value];
+      const cf = getNum('cf5') / FORM_FACTORS[massForm];
       const cs = getNum('cs5');
       const xp = getAssay('xp5');
       const xf = getAssay('xf5');
