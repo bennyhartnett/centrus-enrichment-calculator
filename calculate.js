@@ -372,6 +372,7 @@ function init() {
     cf5: 'numeric', cs5: 'numeric', xp5: 'assay', xf5: 'assay'
   };
 
+
   function validateInput(input) {
     const type = inputParsers[input.id];
     if (!type) return;
