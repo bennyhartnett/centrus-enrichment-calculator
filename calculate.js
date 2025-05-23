@@ -283,48 +283,30 @@ function computeFeedEupFromSwu(xp, xw, xf, S) {
  * @param {number} cs - SWU cost per SWU
  * @returns {{xw:number, F_per_P:number, swu_per_P:number, cost_per_P:number}}
  */
-function findOptimumTails(xp, xf, cf, cs) {
-  let a = EPS, b = xf - EPS;
-  const phi = (1 + Math.sqrt(5)) / 2;
-  // Interior points
-  let c = b - (b - a) / phi;
-  let d = a + (b - a) / phi;
-  let fc = cost(c), fd = cost(d);
+function findOptimumTails(xp, xf, cf, cs, steps = 10000) {
+  let best = { xw: 0, F_per_P: 0, swu_per_P: 0, cost_per_P: Infinity };
 
-  // cost function closure
-  function cost(xw) {
+  for (let i = 1; i < steps; i++) {
+    // avoid xw=0 or xw=xf exactly
+    const xw = (xf - EPS) * (i / steps);
+
+    // feed per product
     const Fp = (xp - xw) / (xf - xw);
+
+    // SWU per product
     const swu_p = valueFunction(xp)
       + ((xp - xf) / (xf - xw)) * valueFunction(xw)
       - ((xp - xw) / (xf - xw)) * valueFunction(xf);
-    return cf * Fp + cs * swu_p;
-  }
 
-  // Golden-section iteration
-  for (let i = 0; i < MAX_ITER && (b - a) > EPS; i++) {
-    if (fc < fd) {
-      b = d;
-      d = c;
-      fd = fc;
-      c = b - (b - a) / phi;
-      fc = cost(c);
-    } else {
-      a = c;
-      c = d;
-      fc = fd;
-      d = a + (b - a) / phi;
-      fd = cost(d);
+    // total cost per product
+    const cost = cf * Fp + cs * swu_p;
+
+    if (cost < best.cost_per_P) {
+      best = { xw, F_per_P: Fp, swu_per_P: swu_p, cost_per_P: cost };
     }
   }
 
-  // Best estimate
-  const xw = (a + b) / 2;
-  const Fp = (xp - xw) / (xf - xw);
-  const swu_p = valueFunction(xp)
-    + ((xp - xf) / (xf - xw)) * valueFunction(xw)
-    - ((xp - xw) / (xf - xw)) * valueFunction(xf);
-  const costVal = cost(xw);
-  return { xw, F_per_P: Fp, swu_per_P: swu_p, cost_per_P: costVal };
+  return best;
 }
 
  
@@ -513,7 +495,7 @@ function init() {
   // Mode 5 - Optimum tails assay
   byId('calc5').addEventListener('click', () => {
     try {
-      const cf = getNum('cf5') / FORM_FACTORS[massForm];
+      const cf = getNum('cf5') * FORM_FACTORS[massForm];
       const cs = getNum('cs5');
       const xp = getAssay('xp5');
       const xf = getAssay('xf5');
