@@ -403,7 +403,7 @@ function init() {
     const factor = UNIT_FACTORS[to.unit] / UNIT_FACTORS[from.unit]
                 * FORM_FACTORS[to.form] / FORM_FACTORS[from.form];
     document.querySelectorAll('input.mass-field').forEach(inp => {
-      const val = parseFloat(inp.value);
+      const val = parseFraction(inp.value);
       if (!isNaN(val)) inp.value = (val * factor).toFixed(6);
     });
   }
@@ -427,7 +427,7 @@ function init() {
       s.textContent = assayPercent ? '% ²³⁵U' : 'fraction';
     });
     document.querySelectorAll('input.assay-field').forEach(inp => {
-      const val = parseFloat(inp.value);
+      const val = parseFraction(inp.value);
       if (!isNaN(val)) inp.value = (val * factor).toFixed(5);
     });
   }
