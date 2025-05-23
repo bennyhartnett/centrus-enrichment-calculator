@@ -147,8 +147,7 @@ function parseMass(raw, unitSelect, formSelect = { value: 'UF₆' }) {
     case 'lb': num *= 0.45359237; break;
     default: throw new Error('Unsupported mass unit: ' + unit);
   }
-  const formFactor = FORM_FACTORS[formSelect.value] || 1;
-  return num / formFactor;
+  return num;
 }
 
 /**
@@ -445,8 +444,7 @@ function init() {
   function getNum(id)  { return parseNumeric(byId(id).value); }
 
   function toDisplayMass(kgU) {
-    const kgForm = kgU * FORM_FACTORS[massForm.value];
-    return formatMass(kgForm, massUnit.value).replace(/ .*/, '');
+    return formatMass(kgU, massUnit.value).replace(/ .*/, '');
   }
 
   const inputParsers = {
