@@ -43,7 +43,7 @@ in the browser:
 - **Feed & product from SWU capacity** – calculate material flows when you know
   the available SWU.
 - **Optimum tails assay** – search for the economic tails assay that minimizes
-  cost per kilogram using a golden‑section search.
+  cost per kilogram by scanning the tails range.
 
 Assay inputs use percentages. After each calculation the result is automatically copied to your clipboard. Valid entries turn green while any errors are shown using SweetAlert2 dialogs. The page continues to work offline after the initial load and the responsive layout—with an animated gradient background—works well on mobile devices. Pressing **Enter** triggers the nearest calculator.
 
@@ -80,7 +80,7 @@ The calculators implement the standard mass balance and separative work unit (SW
 
    $$C = c_f \frac{F}{P} + c_s \frac{\text{SWU}}{P}$$
 
-Additional calculators determine output quantities for given feed or SWU capacity and search for the optimum tails assay that minimizes the cost per kilogram using a golden-section search algorithm.
+Additional calculators determine output quantities for given feed or SWU capacity and search for the optimum tails assay that minimizes the cost per kilogram by scanning possible tails assays.
 
 ## Development
 The algorithms live in [`calculate.js`](calculate.js). Input parsing and error handling are included. SweetAlert2 provides the popup dialogs, while Bootstrap and Bootstrap Icons are loaded from public CDNs. Feel free to modify the HTML or JavaScript to suit your needs.
