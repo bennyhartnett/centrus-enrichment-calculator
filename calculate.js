@@ -495,7 +495,7 @@ function init() {
   // Mode 5 - Optimum tails assay
   byId('calc5').addEventListener('click', () => {
     try {
-      const cf = getNum('cf5') * FORM_FACTORS[massForm];
+      const cf = getNum('cf5');
       const cs = getNum('cs5');
       const xp = getAssay('xp5');
       const xf = getAssay('xf5');
