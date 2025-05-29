@@ -51,8 +51,7 @@ Assay inputs use percentages. After each calculation the result is automatically
 Open `enrichment-calculator.html` in your browser and fill in the values for the desired calculation. Press **Calculate** to see the results. Use the **Clear** button to reset a form if needed. All numeric fields accept decimal input. No build step or server is required—everything runs entirely in the browser.
 
 ## Live Site
-A live demo is available at [[bennyhartnett.com/enrichment-calculator.html]([https://bennyhartnett.com/enrichment-calculator.html](https://bennyhartnett.com/centrus/enrichment-calculator.html)).](https://bennyhartnett.com/centrus/enrichment-calculator.html)
-
+A live demo is available at [`https://bennyhartnett.com/centrus/enrichment-calculator.html`](https://bennyhartnett.com/centrus/enrichment-calculator.html)
 ## Formulas
 The calculators implement the standard mass balance and separative work unit (SWU) equations used in the nuclear fuel cycle. The key relationships are shown below using LaTeX math notation, which GitHub renders natively.
 
